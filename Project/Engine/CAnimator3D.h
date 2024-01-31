@@ -6,20 +6,29 @@
 #include "CMaterial.h"
 #include "CMesh.h"
 
+class CAnim3D;
 class CStructuredBuffer;
 
 class CAnimator3D :
     public CComponent
 {
 private:
+    map<wstring, CAnim3D*>  m_mapAnim;
+    CAnim3D* m_pCurAnim; // 현재 재생중인 Animation
+    bool                m_bFinish;
+    bool                    m_bRepeat;  // 반복
+
     const vector<tMTBone>* m_pVecBones;
     const vector<tMTAnimClip>* m_pVecClip;
+
+    vector<tMTAnimClip> m_vecFrm;
 
     vector<float>				m_vecClipUpdateTime;
     vector<Matrix>				m_vecFinalBoneMat; // 텍스쳐에 전달할 최종 행렬정보
     int							m_iFrameCount; // 30
     double						m_dCurTime;
     int							m_iCurClip; // 클립 인덱스	
+
 
     int							m_iFrameIdx; // 클립의 현재 프레임
     int							m_iNextFrameIdx; // 클립의 다음 프레임
@@ -40,6 +49,11 @@ public:
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
     UINT GetBoneCount() { return (UINT)m_pVecBones->size(); }
     void ClearData();
+    void Play(const wstring& _strName, bool _bRepeat);
+    CAnim3D* FindAnim(const wstring& _strName);
+
+    void CreateAnimation(const wstring& _strAnimName
+        , double CurClipIndex, double mStartTime, double mFinalTime);
 
 private:
     void check_mesh(Ptr<CMesh> _pMesh);

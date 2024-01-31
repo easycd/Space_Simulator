@@ -71,7 +71,7 @@ void CreateTestLevel()
 
 	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\Sky01.png"));
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\Sky02.jpg"));
 
 	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
 
@@ -107,17 +107,23 @@ void CreateTestLevel()
 	// FBX Loading
 	// ============	
 	{
-		// 인스턴싱 테스트
+		//	// 인스턴싱 테스트
+
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
-			
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
-		for (int i = 0; i < 100; ++i)
-		{
-			pObj = pMeshData->Instantiate();
-			pObj->SetName(L"House");
-			SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 0);
-		}
+
+
+
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShuttle.fbx");
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Monster.mdat");
+		pObj = pMeshData->Instantiate();
+		pObj->Transform()->SetRelativeScale(Vec3(5.f, 5.f, 5.f));
+		pObj->Animator3D()->CreateAnimation(L"Walk", 0, 2, 7);
+		pObj->Animator3D()->Play(L"Walk", true);
+		pObj->SetName(L"Monster");
+		SpawnGameObject(pObj, Vec3(100.f, 0.f, 500.f), 0);
+
+	}
 
 		/*pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");		
 		for (int i = 0; i < 10; ++i)
@@ -126,7 +132,6 @@ void CreateTestLevel()
 			pObj->SetName(L"Monster");
 			SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
 		}*/
-	}
 
 
 	//// LandScape Object

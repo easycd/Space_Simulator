@@ -112,16 +112,34 @@ void CreateTestLevel()
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
 
-
-
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShuttle.fbx");
 		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Monster.mdat");
 		pObj = pMeshData->Instantiate();
-		pObj->Transform()->SetRelativeScale(Vec3(5.f, 5.f, 5.f));
+		pObj->Transform()->SetRelativeScale(Vec3(3.f, 3.f, 3.f));
 		pObj->Animator3D()->CreateAnimation(L"Walk", 0, 2, 7);
 		pObj->Animator3D()->Play(L"Walk", true);
+		pObj->AddComponent(new CCollider2D);
+		pObj->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+		pObj->Collider2D()->SetOffsetScale(Vec3(50.f, 50.f, 50.f));
 		pObj->SetName(L"Monster");
-		SpawnGameObject(pObj, Vec3(100.f, 0.f, 500.f), 0);
+		SpawnGameObject(pObj, Vec3(100.f, 0.f, 500.f), L"Player");
+
+	}
+
+	{
+
+		Ptr<CMeshData> HouseMeshData = nullptr;
+		CGameObject* pHouse = nullptr;
+
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShuttle.fbx");
+		HouseMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\House.mdat");
+		pHouse = HouseMeshData->Instantiate();
+		pHouse->Transform()->SetRelativeScale(Vec3(0.5f, 0.5f, 0.5f));
+		pHouse->AddComponent(new CCollider2D);
+		pHouse->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+		pHouse->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+		pHouse->SetName(L"House");
+		SpawnGameObject(pHouse, Vec3(300.f, 0.f, 500.f), L"Monster");
 
 	}
 

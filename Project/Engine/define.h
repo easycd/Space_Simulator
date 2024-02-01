@@ -238,6 +238,8 @@ enum class COLLIDER2D_TYPE
 {
 	RECT,
 	CIRCLE,
+	SPHERE,
+	CUBE,
 };
 
 

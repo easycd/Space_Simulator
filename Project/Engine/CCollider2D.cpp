@@ -7,7 +7,7 @@
 
 CCollider2D::CCollider2D()
 	: CComponent(COMPONENT_TYPE::COLLIDER2D)
-	, m_Shape(COLLIDER2D_TYPE::RECT)
+	, m_Shape(COLLIDER2D_TYPE::SPHERE)
 	, m_bAbsolute(false)
 	, m_iCollisionCount(0)
 {
@@ -45,10 +45,10 @@ void CCollider2D::finaltick()
 	if (0 < m_iCollisionCount)
 		vColor = Vec4(1.f, 0.f, 0.f, 1.f);
 
-	if (COLLIDER2D_TYPE::CIRCLE == m_Shape)
-		DrawDebugCircle(m_matCollider2D, vColor, 0.f);	
+	if (COLLIDER2D_TYPE::SPHERE == m_Shape)
+		DrawDebugSphere(m_matCollider2D, vColor, 0.f);	
 	else	
-		DrawDebugRect(m_matCollider2D, vColor, 0.f);	
+		DrawDebugCube(m_matCollider2D, vColor, 0.f);	
 }
 
 

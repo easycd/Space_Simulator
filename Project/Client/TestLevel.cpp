@@ -12,6 +12,7 @@
 
 #include <Script\CPlayerScript.h>
 #include <Script\CMonsterScript.h>
+#include <Script\CCameraScript.h>
 
 #include "CLevelSaveLoad.h"
 
@@ -40,8 +41,9 @@ void CreateTestLevel()
 
 	pMainCam->AddComponent(new CTransform);
 	pMainCam->AddComponent(new CCamera);
+    pMainCam->AddComponent(new CCameraScript);
 
-	pMainCam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
@@ -69,9 +71,9 @@ void CreateTestLevel()
 	pSkyBox->AddComponent(new CTransform);
 	pSkyBox->AddComponent(new CSkyBox);
 
-	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
+	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
 	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\Sky02.jpg"));
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\SkyBox.tga"));
 
 	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
 
@@ -101,7 +103,7 @@ void CreateTestLevel()
 	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
 	
 
-	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
+	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
 
 	// ============
 	// FBX Loading
@@ -121,30 +123,34 @@ void CreateTestLevel()
 		//pObj->Animator3D()->Play(L"Walk", true);
 		pObj->Transform()->SetRelativeRot(Vec3(XM_PI / 1.8f, XM_PI, 0.f));
 		pObj->AddComponent(new CPlayerScript);
-		pObj->AddComponent(new CCollider2D);
-		pObj->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-		pObj->Collider2D()->SetOffsetScale(Vec3(50.f, 50.f, 50.f));
+
+		CCameraScript* CCS = pMainCam->GetScript<CCameraScript>();
+		CCS->SetTarget(pObj);
+
+		//pObj->AddComponent(new CCollider2D);
+		//pObj->Collider2D()->SetOffsetPos(Vec3(0.f, -300.f, 0.f));
+		//pObj->Collider2D()->SetOffsetScale(Vec3(1000.f,1000.f, 1000.f));
 		pObj->SetName(L"SpaceShip");
 		SpawnGameObject(pObj, Vec3(100.f, 0.f, 500.f), L"Player");
 
 	}
 
-	{
+	//{
 
-		Ptr<CMeshData> HouseMeshData = nullptr;
-		CGameObject* pHouse = nullptr;
+	//	Ptr<CMeshData> HouseMeshData = nullptr;
+	//	CGameObject* pHouse = nullptr;
 
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShuttle.fbx");
-		HouseMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\House.mdat");
-		pHouse = HouseMeshData->Instantiate();
-		pHouse->Transform()->SetRelativeScale(Vec3(0.5f, 0.5f, 0.5f));
-		pHouse->AddComponent(new CCollider2D);
-		pHouse->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-		pHouse->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
-		pHouse->SetName(L"House");
-		SpawnGameObject(pHouse, Vec3(300.f, 0.f, 500.f), L"Monster");
+	//	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShuttle.fbx");
+	//	HouseMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\House.mdat");
+	//	pHouse = HouseMeshData->Instantiate();
+	//	pHouse->Transform()->SetRelativeScale(Vec3(0.5f, 0.5f, 0.5f));
+	//	pHouse->AddComponent(new CCollider2D);
+	//	pHouse->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	//	pHouse->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+	//	pHouse->SetName(L"House");
+	//	SpawnGameObject(pHouse, Vec3(300.f, 0.f, 500.f), L"Monster");
 
-	}
+	//}
 
 		/*pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");		
 		for (int i = 0; i < 10; ++i)

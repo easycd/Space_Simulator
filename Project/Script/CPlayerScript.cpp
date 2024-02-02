@@ -9,7 +9,7 @@
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
-	, m_fSpeed(500.f)
+	, m_fSpeed(100.f)
 {
 	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_fSpeed, "Player Speed");
 }
@@ -29,6 +29,30 @@ void CPlayerScript::tick()
 {
 	Vec3 vCurPos = Transform()->GetRelativePos();
 
+	if (KEY_PRESSED(KEY::W))
+	{
+		vCurPos.z += DT * m_fSpeed;
+		//vPos += DT * vFront * fSpeed;
+
+	}
+	if (KEY_PRESSED(KEY::S))
+	{
+		vCurPos.z -= DT * m_fSpeed;
+		//vPos += DT * vFront * fSpeed;
+
+	}
+	if (KEY_PRESSED(KEY::A))
+	{
+		vCurPos.x -= DT * m_fSpeed;
+		//vPos += DT * vFront * fSpeed;
+
+	}
+	if (KEY_PRESSED(KEY::D))
+	{
+		vCurPos.x += DT * m_fSpeed;
+		//vPos += DT * vFront * fSpeed;
+
+	}
 	if (KEY_PRESSED(KEY::UP))
 	{
 		for (int i = 0; i < 4; ++i)

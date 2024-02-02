@@ -7,7 +7,8 @@
 CCameraScript::CCameraScript()
 	: CScript((UINT)SCRIPT_TYPE::CAMERASCRIPT)
 	, m_Target(nullptr)
-	, m_fCamSpeed(100.f)
+	, m_fCamSpeed(5.f)
+	, Offset(Vec3(0.f, 0.f, 0.f))
 {
 }
 
@@ -17,6 +18,8 @@ CCameraScript::~CCameraScript()
 
 void CCameraScript::begin()
 {
+	if (m_Target != nullptr)
+		Offset = GetOwner()->Transform()->GetRelativePos() - m_Target->Transform()->GetRelativePos();
 }
 
 void CCameraScript::tick()
@@ -85,32 +88,9 @@ void CCameraScript::Camera3DMove()
 	if (m_Target != nullptr)
 	{
 		Vec3 TarGetPos = m_Target->Transform()->GetRelativePos();
-		if (KEY_PRESSED(KEY::LSHIFT))
-			fSpeed *= 10.f;
+		Vec3 CameraPos = GetOwner()->Transform()->GetRelativePos();
 
-		if (KEY_PRESSED(KEY::W))
-		{
-			//TarGetPos += DT * vFront * fSpeed;
-			vPos += DT * vFront * fSpeed;
-			
-		}
-
-		if (KEY_PRESSED(KEY::S))
-		{
-			//vPos -= DT * vFront * fSpeed;
-		}
-
-		if (KEY_PRESSED(KEY::A))
-		{
-			//vPos -= DT * vRight * fSpeed;
-		}
-
-		if (KEY_PRESSED(KEY::D))
-		{
-			//vPos += DT * vRight * fSpeed;
-		}
-
-
+		CameraPos = TarGetPos + Offset;
 
 		if (KEY_PRESSED(KEY::RBTN))
 		{
@@ -119,9 +99,41 @@ void CCameraScript::Camera3DMove()
 			vRot.x -= DT * vMouseDir.y * 0.5f;
 		}
 
-		Transform()->SetRelativePos(TarGetPos);
-		Transform()->SetRelativePos(vPos);
+		Transform()->SetRelativePos(CameraPos);
+		//Transform()->SetRelativePos(TarGetPos);
+		//Transform()->SetRelativePos(vPos);
 		Transform()->SetRelativeRot(vRot);
+		//Vector3 dir = TarGetPos - CameraPos;
+
+		//Vector3 MoveVector = Vec3(dir.x * fSpeed * DT, dir.y * fSpeed * DT, dir.z * fSpeed * DT);
+
+		
+
+		//if (KEY_PRESSED(KEY::LSHIFT))
+		//	fSpeed *= 10.f;
+
+		//if (KEY_PRESSED(KEY::W))
+		//{
+		//	//TarGetPos += DT * vFront * fSpeed;
+		//	//vPos.z += DT * vFront.z * fSpeed;
+		//	
+		//}
+
+		//if (KEY_PRESSED(KEY::S))
+		//{
+		//	//vPos.z -= DT * vFront.z * fSpeed;
+		//}
+
+		//if (KEY_PRESSED(KEY::A))
+		//{
+		//	//vPos.x -= DT * vRight.x * fSpeed;
+		//}
+
+		//if (KEY_PRESSED(KEY::D))
+		//{
+		//	//vPos.x += DT * vRight.x * fSpeed;
+		//}
+
 	}
 
 }

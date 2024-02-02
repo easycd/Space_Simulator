@@ -5,6 +5,7 @@ class CCameraScript
 {
 private:
     float       m_fCamSpeed;
+    Vector3 Offset;
     CGameObject* m_Target;
 
 public:

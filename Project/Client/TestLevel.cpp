@@ -106,22 +106,25 @@ void CreateTestLevel()
 	// ============
 	// FBX Loading
 	// ============	
+
 	{
-		//	// 인스턴싱 테스트
+
 
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
 
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShuttle.fbx");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Monster.mdat");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShip.fbx");
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Monster.mdat");
 		pObj = pMeshData->Instantiate();
-		pObj->Transform()->SetRelativeScale(Vec3(3.f, 3.f, 3.f));
-		pObj->Animator3D()->CreateAnimation(L"Walk", 0, 2, 7);
-		pObj->Animator3D()->Play(L"Walk", true);
+		pObj->Transform()->SetRelativeScale(Vec3(0.3f, 0.3f, 0.3f));
+		//pObj->Animator3D()->CreateAnimation(L"Walk", 0, 2, 7);
+		//pObj->Animator3D()->Play(L"Walk", true);
+		pObj->Transform()->SetRelativeRot(Vec3(XM_PI / 1.8f, XM_PI, 0.f));
+		pObj->AddComponent(new CPlayerScript);
 		pObj->AddComponent(new CCollider2D);
 		pObj->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 		pObj->Collider2D()->SetOffsetScale(Vec3(50.f, 50.f, 50.f));
-		pObj->SetName(L"Monster");
+		pObj->SetName(L"SpaceShip");
 		SpawnGameObject(pObj, Vec3(100.f, 0.f, 500.f), L"Player");
 
 	}

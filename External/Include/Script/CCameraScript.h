@@ -5,6 +5,13 @@ class CCameraScript
 {
 private:
     float       m_fCamSpeed;
+    bool BoosterState;
+
+    //bool SetOff;
+
+    //CPlayerScript* PlayerScript;
+
+    Vector3 PrevOffset;
     Vector3 Offset;
     CGameObject* m_Target;
 
@@ -13,9 +20,10 @@ public:
     virtual void tick() override;
 
     void SetTarget(CGameObject* target) { m_Target = target; }
+    //void SetOffset(Vec3(Off)) { Offset = Off; }
+    //void SetPlayerScript(CPlayerScript ps) { PlayerScript = ps; }
 
 private:
-    void Camera2DMove();
     void Camera3DMove();
 
     CLONE(CCameraScript);

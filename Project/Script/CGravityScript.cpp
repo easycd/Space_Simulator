@@ -13,6 +13,7 @@ CGravityScript::~CGravityScript()
 
 void CGravityScript::tick()
 {
+
 }
 
 

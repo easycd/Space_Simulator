@@ -86,7 +86,7 @@ void CreateTestLevel()
 
 	pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
 	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
-	pLightObj->Light3D()->SetRadius(500.f);
+	pLightObj->Light3D()->SetRadius(10000.f);
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));	
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 	
@@ -121,36 +121,40 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativeScale(Vec3(0.3f, 0.3f, 0.3f));
 		//pObj->Animator3D()->CreateAnimation(L"Walk", 0, 2, 7);
 		//pObj->Animator3D()->Play(L"Walk", true);
-		pObj->Transform()->SetRelativeRot(Vec3(XM_PI / 1.8f, XM_PI, 0.f));
+		pObj->Transform()->SetRelativeRot(Vec3(XM_PI / 2.2f, XM_PI * 1.05, XM_PI / 90.f));
 		pObj->AddComponent(new CPlayerScript);
+
+		//CPlayerScript* PS = pObj->GetScript<CPlayerScript>();
 
 		CCameraScript* CCS = pMainCam->GetScript<CCameraScript>();
 		CCS->SetTarget(pObj);
+		//CCS->SetPlayerScript(PS);
+		
 
 		//pObj->AddComponent(new CCollider2D);
 		//pObj->Collider2D()->SetOffsetPos(Vec3(0.f, -300.f, 0.f));
 		//pObj->Collider2D()->SetOffsetScale(Vec3(1000.f,1000.f, 1000.f));
 		pObj->SetName(L"SpaceShip");
-		SpawnGameObject(pObj, Vec3(100.f, 0.f, 500.f), L"Player");
+		SpawnGameObject(pObj, Vec3(100.f, -50.f, 500.f), L"Player");
 
 	}
 
-	//{
+	{
 
-	//	Ptr<CMeshData> HouseMeshData = nullptr;
-	//	CGameObject* pHouse = nullptr;
+		Ptr<CMeshData> HouseMeshData = nullptr;
+		CGameObject* pHouse = nullptr;
 
-	//	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShuttle.fbx");
-	//	HouseMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\House.mdat");
-	//	pHouse = HouseMeshData->Instantiate();
-	//	pHouse->Transform()->SetRelativeScale(Vec3(0.5f, 0.5f, 0.5f));
-	//	pHouse->AddComponent(new CCollider2D);
-	//	pHouse->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-	//	pHouse->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
-	//	pHouse->SetName(L"House");
-	//	SpawnGameObject(pHouse, Vec3(300.f, 0.f, 500.f), L"Monster");
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShuttle.fbx");
+		HouseMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\House.mdat");
+		pHouse = HouseMeshData->Instantiate();
+		pHouse->Transform()->SetRelativeScale(Vec3(0.5f, 0.5f, 0.5f));
+		pHouse->AddComponent(new CCollider2D);
+		pHouse->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+		pHouse->Collider2D()->SetOffsetScale(Vec3(100.f, 100.f, 100.f));
+		pHouse->SetName(L"House");
+		SpawnGameObject(pHouse, Vec3(200.f, 300.f, 1000.f), L"Monster");
 
-	//}
+	}
 
 		/*pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");		
 		for (int i = 0; i < 10; ++i)

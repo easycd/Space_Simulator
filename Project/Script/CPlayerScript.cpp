@@ -10,6 +10,7 @@
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
 	, m_fSpeed(100.f)
+	, m_Booster(false)
 {
 	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_fSpeed, "Player Speed");
 }
@@ -28,6 +29,7 @@ void CPlayerScript::begin()
 void CPlayerScript::tick()
 {
 	Vec3 vCurPos = Transform()->GetRelativePos();
+	Vec3 vRot = Transform()->GetRelativeRot();
 
 	if (KEY_PRESSED(KEY::W))
 	{
@@ -44,6 +46,9 @@ void CPlayerScript::tick()
 	if (KEY_PRESSED(KEY::A))
 	{
 		vCurPos.x -= DT * m_fSpeed;
+		//vRot.y += DT * 0.05f;
+		//vRot.x -= DT * 0.05f;
+
 		//vPos += DT * vFront * fSpeed;
 
 	}
@@ -53,37 +58,31 @@ void CPlayerScript::tick()
 		//vPos += DT * vFront * fSpeed;
 
 	}
-	if (KEY_PRESSED(KEY::UP))
+	if (KEY_PRESSED(KEY::LSHIFT))
 	{
-		for (int i = 0; i < 4; ++i)
+		if (KEY_PRESSED(KEY::W))
 		{
-			vCurPos.y += DT * m_fSpeed;
+			m_Booster = true;
+			vCurPos.z += DT * m_fSpeed * 2.f;
+			//vPos += DT * vFront * fSpeed;
 		}
+	}
+	if (m_Booster)
+	{
+		if (KEY_RELEASE(KEY::LSHIFT))
+			m_Booster = false;
 	}
 
-	if (KEY_PRESSED(KEY::DOWN))
-	{
-		for (int i = 0; i < 4; ++i)
-		{
-			vCurPos.y -= DT * m_fSpeed;
-		}
-	}
+	//if (KEY_PRESSED(KEY::RBTN))
+	//{
+		//Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
+		//vRot.y += DT * vMouseDir.x * 0.05f;
+		//vRot.x -= DT * vMouseDir.y * 0.05f;
+	//}
 
-	if (KEY_PRESSED(KEY::LEFT))
-	{
-		for (int i = 0; i < 4; ++i)
-		{
-			vCurPos.x -= DT * m_fSpeed;
-		}
-	}
 
-	if (KEY_PRESSED(KEY::RIGHT))
-	{
-		for (int i = 0; i < 4; ++i)
-		{
-			vCurPos.x += DT * m_fSpeed;
-		}
-	}
+	
+	
 
 	if (KEY_PRESSED(KEY::Z))
 	{
@@ -100,6 +99,7 @@ void CPlayerScript::tick()
 
 		Shoot();
 	}	
+	Transform()->SetRelativeRot(vRot);
 }
 
 void CPlayerScript::Shoot()
@@ -111,6 +111,10 @@ void CPlayerScript::Shoot()
 
 	// 레벨에 추가
 	SpawnGameObject(pCloneMissile, vMissilePos, L"PlayerProjectile");
+}
+
+void CPlayerScript::Booster()
+{
 }
 
 void CPlayerScript::BeginOverlap(CCollider2D* _Other)

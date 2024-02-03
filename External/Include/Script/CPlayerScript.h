@@ -6,6 +6,7 @@ class CPlayerScript :
 {
 private:
     float       m_fSpeed;
+    bool m_Booster;
 
 public:
     virtual void begin() override;
@@ -13,8 +14,14 @@ public:
 
     virtual void BeginOverlap(CCollider2D* _Other) override;
 
+    void SetBooster(bool Booster) { m_Booster = Booster; }
+    bool GetBooster() { return m_Booster; }
+
+    CPlayerScript* GetPlayerScript() { return this; }
+
 private:
     void Shoot();
+    void Booster();
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

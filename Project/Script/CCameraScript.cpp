@@ -34,6 +34,7 @@ void CCameraScript::begin()
 
 void CCameraScript::tick()
 {
+	Vec2 MousePos = CKeyMgr::GetInst()->GetMousePos();
 		Camera3DMove();
 }
 
@@ -49,7 +50,9 @@ void CCameraScript::Camera3DMove()
 			//Offset = GetOwner()->Transform()->GetRelativePos() - m_Target->Transform()->GetRelativePos();
 			//Offset.x += 40;
 			//Offset.y += 180;
-			Offset.z -= 10.0 * DT;
+			//Offset.z -= 10.0 * DT;
+			if(Offset.z <= -490 && Offset.z >= -530)
+				Offset.z -= 70.0 * DT;
 		}
 
 		if (PlayerScript->GetBooster() == false /*&& BoosterState == true*/) // 부스터가 꺼져있는상태
@@ -60,7 +63,7 @@ void CCameraScript::Camera3DMove()
 			//Offset.y += 180;
 
 			if(Offset.z < PrevOffset.z)
-		     Offset.z += 20.0 * DT;
+		     Offset.z += 60.0 * DT;
 				
 		}
 

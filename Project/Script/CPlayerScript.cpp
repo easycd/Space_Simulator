@@ -9,8 +9,12 @@
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
+	, PrevRot(Vec3(0.f,0.f,0.f))
+	, PrevMousePos(Vec2(0.f,0.f))
 	, m_fSpeed(100.f)
 	, m_Booster(false)
+	, ClearLZ(false)
+	, ClearRZ(false)
 {
 	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_fSpeed, "Player Speed");
 }
@@ -22,6 +26,8 @@ CPlayerScript::~CPlayerScript()
 
 void CPlayerScript::begin()
 {
+	PrevRot = Transform()->GetRelativeRot();
+	//Vec2 PrevMousePos = CKeyMgr::GetInst()->GetMousePos();
 	// 동적 재질 생성
 	MeshRender()->GetDynamicMaterial(0);
 }
@@ -30,6 +36,24 @@ void CPlayerScript::tick()
 {
 	Vec3 vCurPos = Transform()->GetRelativePos();
 	Vec3 vRot = Transform()->GetRelativeRot();
+
+	if (ClearRZ)
+	{
+		if (vRot.z < PrevRot.z)
+			vRot.z += DT * 2.0f;
+			
+		if (vRot.z >= PrevRot.z)
+			ClearRZ = false;
+	}
+
+	if (ClearLZ)
+	{
+		if (vRot.z > PrevRot.z)
+			vRot.z -= DT * 2.0f;
+
+		if (vRot.z <= PrevRot.z)
+			ClearLZ = false;
+	}
 
 	if (KEY_PRESSED(KEY::W))
 	{
@@ -45,18 +69,30 @@ void CPlayerScript::tick()
 	}
 	if (KEY_PRESSED(KEY::A))
 	{
-		vCurPos.x -= DT * m_fSpeed;
+		//vCurPos.x -= DT * m_fSpeed;
+		if (vRot.z < 0.25f)
+			vRot.z += DT * 1.5f;
+		
 		//vRot.y += DT * 0.05f;
 		//vRot.x -= DT * 0.05f;
 
 		//vPos += DT * vFront * fSpeed;
+	}
 
+	if (KEY_RELEASE(KEY::A))
+	{
+		ClearLZ = true;
 	}
 	if (KEY_PRESSED(KEY::D))
 	{
-		vCurPos.x += DT * m_fSpeed;
+		//vCurPos.x += DT * m_fSpeed;
+		if(vRot.z > -0.25f)
+		vRot.z -= DT * 1.5f;
 		//vPos += DT * vFront * fSpeed;
-
+	}
+	if (KEY_RELEASE(KEY::D))
+	{
+			ClearRZ = true;
 	}
 	if (KEY_PRESSED(KEY::LSHIFT))
 	{
@@ -76,13 +112,10 @@ void CPlayerScript::tick()
 	//if (KEY_PRESSED(KEY::RBTN))
 	//{
 		//Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
+	     //Vec2 vMousePos = CKeyMgr::GetInst()->GetMousePos();
 		//vRot.y += DT * vMouseDir.x * 0.05f;
 		//vRot.x -= DT * vMouseDir.y * 0.05f;
 	//}
-
-
-	
-	
 
 	if (KEY_PRESSED(KEY::Z))
 	{
@@ -126,6 +159,8 @@ void CPlayerScript::BeginOverlap(CCollider2D* _Other)
 		DestroyObject(pOtherObject);		
 	}
 }
+
+
 
 
 

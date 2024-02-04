@@ -5,6 +5,10 @@ class CPlayerScript :
     public CScript
 {
 private:
+    bool ClearLZ;
+    bool ClearRZ;
+    Vec3 PrevRot;
+    Vec2 PrevMousePos;
     float       m_fSpeed;
     bool m_Booster;
 

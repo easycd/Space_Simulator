@@ -82,7 +82,7 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
         vViewNormal = normalize(mul(vNormal, vRotateMat));
     }
     
-    tLightColor lightcolor = (tLightColor) 0.f;
+    tLightColor lightcolor = (tLightColor) 100.f;
     float fSpecPow = 0.f;
     
     for (uint i = 0; i < g_Light3DCount; ++i)
@@ -93,6 +93,8 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
     vOutColor.xyz = vOutColor.xyz * lightcolor.vDiffuse.xyz
                     + vOutColor.xyz * lightcolor.vAmbient.xyz
                     + saturate(g_Light3DBuffer[0].Color.vDiffuse.xyz) * 0.3f * fSpecPow * SPEC_COEFF;
+    
+   
     
     if(IS_SKYBOX_ENV)
     {        

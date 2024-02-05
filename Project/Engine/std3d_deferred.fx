@@ -155,9 +155,4 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
     return output;
 }
 
-
-
-
-
-
 #endif

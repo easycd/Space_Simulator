@@ -145,9 +145,9 @@ PS_OUT PS_PointLightShader(VS_OUT _in)
     // 픽셀 위치랑 동일한 UV 위치에서 Position 값을 가져왔는데, 해당 지점에 기록된 물체가 없다.
     if (vViewPos.x == 0.f && vViewPos.y == 0.f && vViewPos.z == 0.f)
     {
-        //output.vDiffuse = float4(1.f, 0.f, 0.f, 1.f);
-        //output.vSpecular = float4(1.f, 0.f, 0.f, 1.f);
-        //return output;
+       //output.vDiffuse = float4(1.f, 0.f, 0.f, 1.f);
+       //output.vSpecular = float4(1.f, 0.f, 0.f, 1.f);
+       //return output;
         discard;      
     }
     

@@ -71,7 +71,9 @@ void CreateTestLevel()
 
 	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\SkyBox.tgag"));
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\skybox.png"));
+	//pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\test.png"));
+
 
 	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
 
@@ -105,6 +107,7 @@ void CreateTestLevel()
 
 			pObj->SetName(L"01_Sun");
 			pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
+			//pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"), 0);
 
 			SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Default");
 		}

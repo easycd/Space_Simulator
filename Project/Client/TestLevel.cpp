@@ -26,6 +26,7 @@ void CreateTestLevel()
 
 	// Layer 이름설정
 	pCurLevel->GetLayer(0)->SetName(L"Default");
+	pCurLevel->GetLayer(6)->SetName(L"sun");
 	pCurLevel->GetLayer(1)->SetName(L"Tile");
 	pCurLevel->GetLayer(2)->SetName(L"Player");
 	pCurLevel->GetLayer(3)->SetName(L"Monster");
@@ -100,16 +101,33 @@ void CreateTestLevel()
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
 
+		//{	//태양
+		//	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\01_Sun.fbx");
+		//	pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\01_Sun.mdat", L"meshdata\\01_Sun.mdat");
+		//	pObj = pMeshData->Instantiate();
+		//
+		//	pObj->SetName(L"01_Sun");
+		//	pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
+		//	//pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"), 0);
+		//
+		//	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Default");
+		//}
+
 		{	//태양
-			pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\01_Sun.fbx");
-			pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\01_Sun.mdat", L"meshdata\\01_Sun.mdat");
-			pObj = pMeshData->Instantiate();
+			CGameObject* pObject = new CGameObject;
+			pObject->SetName(L"sun");
+			pObject->AddComponent(new CTransform);
+			pObject->AddComponent(new CMeshRender);
 
-			pObj->SetName(L"01_Sun");
-			pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
-			//pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"), 0);
+			pObject->Transform()->SetRelativeScale(Vec3(2000.f, 2000.f, 2000.f));
+			pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
-			SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Default");
+
+			pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+			pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"), 0);
+			pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\solarsystem\\sun.jpg"));
+
+			SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"sun");
 		}
 
 		{	//수성

@@ -50,18 +50,18 @@ void CreateTestLevel()
 
 	SpawnGameObject(pMainCam, Vec3(0.f, 0.f, 0.f), 0);
 
-	// UI cameara
-	CGameObject* pUICam = new CGameObject;
-	pUICam->SetName(L"UICamera");
+	//// UI cameara
+	////CGameObject* pUICam = new CGameObject;
+	////pUICam->SetName(L"UICamera");
 
-	pUICam->AddComponent(new CTransform);
-	pUICam->AddComponent(new CCamera);
+	////pUICam->AddComponent(new CTransform);
+	////pUICam->AddComponent(new CCamera);
 
-	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
-	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
+	////pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	////pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
+	////pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
 
-	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
+	////SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 
 
 	// SkyBox 추가
@@ -75,7 +75,7 @@ void CreateTestLevel()
 	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
 	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\SkyBox.tga"));
 
-	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
+	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), L"Player");
 
 	// 광원 추가
 	CGameObject* pLightObj = new CGameObject;
@@ -109,36 +109,50 @@ void CreateTestLevel()
 	// FBX Loading
 	// ============	
 
-	{
+	
 
 
 		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* pObj = nullptr;
+		CGameObject* Plane = nullptr;
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShip.fbx");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Monster.mdat");
-		pObj = pMeshData->Instantiate();
-		pObj->Transform()->SetRelativeScale(Vec3(0.3f, 0.3f, 0.3f));
+		Plane = pMeshData->Instantiate();
+		Plane->Transform()->SetRelativeScale(Vec3(0.3f, 0.3f, 0.3f));
 		//pObj->Animator3D()->CreateAnimation(L"Walk", 0, 2, 7);
 		//pObj->Animator3D()->Play(L"Walk", true);
-		pObj->Transform()->SetRelativeRot(Vec3(XM_PI / 2.2f, XM_PI * 1.05, XM_PI / 90.f));
-		pObj->AddComponent(new CPlayerScript);
+		Plane->Transform()->SetRelativeRot(Vec3(XM_PI / 2.2f, XM_PI * 1.05, XM_PI / 90.f));
+		Plane->AddComponent(new CPlayerScript);
 
 		//CPlayerScript* PS = pObj->GetScript<CPlayerScript>();
 
 		CCameraScript* CCS = pMainCam->GetScript<CCameraScript>();
-		CCS->SetTarget(pObj);
+		CCS->SetTarget(Plane);
 		//CCS->SetPlayerScript(PS);
 		
 
 		//pObj->AddComponent(new CCollider2D);
 		//pObj->Collider2D()->SetOffsetPos(Vec3(0.f, -300.f, 0.f));
 		//pObj->Collider2D()->SetOffsetScale(Vec3(1000.f,1000.f, 1000.f));
-		pObj->SetName(L"SpaceShip");
-		SpawnGameObject(pObj, Vec3(100.f, -50.f, 500.f), L"Player");
+		Plane->SetName(L"SpaceShip");
+		SpawnGameObject(Plane, Vec3(53.f, -170.f, 500.f), L"Player");
 
-	}
+	
+		//CGameObject* pChild = new CGameObject;
 
+		//pChild->SetName(L"Child");
+		//pChild->AddComponent(new CTransform);
+		//pChild->AddComponent(new CMeshRender);
+
+		//pChild->Transform()->SetAbsolute(true);
+		//pChild->Transform()->SetRelativePos(0.f, 0.f, -600.f);
+		//pChild->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
+
+		//pChild->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+		//pChild->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"),0);
+
+		pMainCam->AddChild(Plane);
+	
 	{
 
 		Ptr<CMeshData> HouseMeshData = nullptr;

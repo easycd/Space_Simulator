@@ -5,16 +5,22 @@
 #include <Engine\CMaterial.h>
 
 #include "CMissileScript.h"
+#include "CCameraScript.h"
 
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
 	, PrevRot(Vec3(0.f,0.f,0.f))
+	, PrevRotX(0.f)
+	, PrevRotY(0.f)
+	, RotXDiff(0.f)
+	, RotYDiff(0.f)
 	, PrevMousePos(Vec2(0.f,0.f))
 	, m_fSpeed(100.f)
 	, m_Booster(false)
 	, ClearLZ(false)
 	, ClearRZ(false)
+	, OffSet(Vec3(0.f,0.f,0.f))
 {
 	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_fSpeed, "Player Speed");
 }
@@ -26,113 +32,18 @@ CPlayerScript::~CPlayerScript()
 
 void CPlayerScript::begin()
 {
+	OffSet = Vec3(0.f, 0.f, -500.f);
+
 	PrevRot = Transform()->GetRelativeRot();
-	//Vec2 PrevMousePos = CKeyMgr::GetInst()->GetMousePos();
 	// 동적 재질 생성
 	MeshRender()->GetDynamicMaterial(0);
 }
 
 void CPlayerScript::tick()
 {
-	Vec3 vCurPos = Transform()->GetRelativePos();
-	Vec3 vRot = Transform()->GetRelativeRot();
+	//PrevMousePos = CKeyMgr::GetInst()->GetMousePos();
 
-	if (ClearRZ)
-	{
-		if (vRot.z < PrevRot.z)
-			vRot.z += DT * 2.0f;
-			
-		if (vRot.z >= PrevRot.z)
-			ClearRZ = false;
-	}
-
-	if (ClearLZ)
-	{
-		if (vRot.z > PrevRot.z)
-			vRot.z -= DT * 2.0f;
-
-		if (vRot.z <= PrevRot.z)
-			ClearLZ = false;
-	}
-
-	if (KEY_PRESSED(KEY::W))
-	{
-		vCurPos.z += DT * m_fSpeed;
-		//vPos += DT * vFront * fSpeed;
-
-	}
-	if (KEY_PRESSED(KEY::S))
-	{
-		vCurPos.z -= DT * m_fSpeed;
-		//vPos += DT * vFront * fSpeed;
-
-	}
-	if (KEY_PRESSED(KEY::A))
-	{
-		//vCurPos.x -= DT * m_fSpeed;
-		if (vRot.z < 0.25f)
-			vRot.z += DT * 1.5f;
-		
-		//vRot.y += DT * 0.05f;
-		//vRot.x -= DT * 0.05f;
-
-		//vPos += DT * vFront * fSpeed;
-	}
-
-	if (KEY_RELEASE(KEY::A))
-	{
-		ClearLZ = true;
-	}
-	if (KEY_PRESSED(KEY::D))
-	{
-		//vCurPos.x += DT * m_fSpeed;
-		if(vRot.z > -0.25f)
-		vRot.z -= DT * 1.5f;
-		//vPos += DT * vFront * fSpeed;
-	}
-	if (KEY_RELEASE(KEY::D))
-	{
-			ClearRZ = true;
-	}
-	if (KEY_PRESSED(KEY::LSHIFT))
-	{
-		if (KEY_PRESSED(KEY::W))
-		{
-			m_Booster = true;
-			vCurPos.z += DT * m_fSpeed * 2.f;
-			//vPos += DT * vFront * fSpeed;
-		}
-	}
-	if (m_Booster)
-	{
-		if (KEY_RELEASE(KEY::LSHIFT))
-			m_Booster = false;
-	}
-
-	//if (KEY_PRESSED(KEY::RBTN))
-	//{
-		//Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
-	     //Vec2 vMousePos = CKeyMgr::GetInst()->GetMousePos();
-		//vRot.y += DT * vMouseDir.x * 0.05f;
-		//vRot.x -= DT * vMouseDir.y * 0.05f;
-	//}
-
-	if (KEY_PRESSED(KEY::Z))
-	{
-		Vec3 vRot = Transform()->GetRelativeRot();
-		vRot.z += DT * XM_PI;
-		Transform()->SetRelativeRot(vRot);
-	}
-
-	Transform()->SetRelativePos(vCurPos);			
-
-	if (KEY_TAP(KEY::SPACE))
-	{
-		DrawDebugCircle(Transform()->GetWorldPos(), 500.f, Vec4(0.f, 0.f, 1.f, 1.f), Vec3(0.f, 0.f, 0.f), 2.f);
-
-		Shoot();
-	}	
-	Transform()->SetRelativeRot(vRot);
+	Move();
 }
 
 void CPlayerScript::Shoot()
@@ -144,6 +55,135 @@ void CPlayerScript::Shoot()
 
 	// 레벨에 추가
 	SpawnGameObject(pCloneMissile, vMissilePos, L"PlayerProjectile");
+}
+
+void CPlayerScript::Move()
+{
+	Vec3 vCurPos = Transform()->GetRelativePos();
+	Vec3 vRot = Transform()->GetRelativeRot();
+	Vec2 MousePos = CKeyMgr::GetInst()->GetMousePos(); //Y = 426
+
+	//Vec3 vFront = Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	//Vec3 vUp = Transform()->GetRelativeDir(DIR_TYPE::UP);
+	//Vec3 vRight = Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
+
+
+	//if (MousePos.x - PrevMousePos.x > 0 && MousePos.x > 750 && MousePos.x < 1270) //화면 중앙에서 오른쪽 
+	//{
+	//	vRot.y += DT * 0.5f;
+	//	RotYDiff = vRot.y - PrevRotY; // 카메라에 넘겨줄 Diff값 = 현재 회전 값 - 전 프레임 회전 값
+
+	//}
+	//if (MousePos.x - PrevMousePos.x < 0 && MousePos.x < 600 && MousePos.x > 0)
+	//{
+	//	//if (vRot.y > 3.0)
+	//		vRot.y -= DT * 0.5f;
+	//		RotYDiff = vRot.y - PrevRotY;
+	//}
+
+	//if (MousePos.y - PrevMousePos.y > 0)
+	//{
+	//	vRot.x -= DT * 0.5f;
+	//	RotXDiff = vRot.x - PrevRotX;
+	//}
+	//if (MousePos.y - PrevMousePos.y < 0)
+	//{
+	//	vRot.x += DT * 0.5f;
+	//	RotXDiff = vRot.x - PrevRotX;
+	//}
+
+	if (KEY_PRESSED(KEY::W))
+	{
+		//if (CameraScript != nullptr)
+		//{
+		//	//Vec3 vFront = CameraScript->GetvFront();
+		////vCurPos += DT * vFront * m_fSpeed;
+		//CameraScript->GetOwner()->Transform()->SetRelativePos(vCurPos.x + 40, vCurPos.y + 180, vCurPos.z - 500);
+		//}
+	}
+
+
+	if (KEY_PRESSED(KEY::S))
+	{
+		//vCurPos.z -= DT * m_fSpeed;
+	}
+	if (KEY_PRESSED(KEY::A))
+	{
+
+			//vRot.y -= DT * 0.2f;
+		   //RotYDiff = vRot.y - PrevRotY;
+			//if (CameraScript != nullptr)
+			//{
+			//	Vec3 CameraRot = CameraScript->GetOwner()->Transform()->GetRelativeRot();
+			//	CameraRot.y -= DT * 0.5f;
+			//	CameraScript->GetOwner()->Transform()->SetRelativeRot(CameraRot);
+			//	Vec3 CameraPos = CameraScript->GetOwner()->Transform()->GetRelativePos();
+			//	CameraScript->GetOwner()->Transform()->SetRelativePos(vCurPos.x, vCurPos.y, vCurPos.z - 500);
+			//}
+
+
+
+
+		//vCurPos.x -= DT * m_fSpeed;
+		//if (vRot.z < 0.25f)
+		//	vRot.z += DT * 1.5f;
+
+		//vRot.y += DT * 0.05f;
+		//vRot.x -= DT * 0.05f;
+
+		//vPos += DT * vFront * fSpeed;
+	}
+
+	//if (KEY_RELEASE(KEY::A))
+	//{
+	//	ClearLZ = true;
+	//}
+	if (KEY_PRESSED(KEY::D))
+	{
+
+
+
+			//vRot.y += DT * 0.2f;
+         	//RotYDiff = vRot.y - PrevRotY; // 카메라에 넘겨줄 Diff값 = 현재 회전 값 - 전 프레임 회전 값 
+			//if (CameraScript != nullptr)
+			//{
+			//	Vec3 CameraRot = CameraScript->GetOwner()->Transform()->GetRelativeRot();
+			//	CameraRot.y += DT * 1.0f;
+			//	CameraScript->GetOwner()->Transform()->SetRelativeRot(CameraRot);
+			//	Vec3 CameraPos = CameraScript->GetOwner()->Transform()->GetRelativePos();
+			//	CameraScript->GetOwner()->Transform()->SetRelativePos(vCurPos.x + 40, vCurPos.y + 180, vCurPos.z - 500);
+			//}
+			// 
+			// 
+			// 
+			// 
+		//vCurPos.x += DT * m_fSpeed;
+		//if(vRot.z > -0.25f)
+		//vRot.z -= DT * 1.5f;
+		//vPos += DT * vFront * fSpeed;
+	}
+	//if (KEY_RELEASE(KEY::D))
+	//{
+	//	ClearRZ = true;
+	//}
+	//if (KEY_PRESSED(KEY::LSHIFT))
+	//{
+	//	if (KEY_PRESSED(KEY::W))
+	//	{
+	//		m_Booster = true;
+	//		vCurPos.z+= DT * m_fSpeed * 2.f;
+	//	}
+	//}
+	//if (m_Booster)
+	//{
+	//	if (KEY_RELEASE(KEY::LSHIFT))
+	//		m_Booster = false;
+	//}
+	Transform()->SetRelativeRot(vRot);
+	Transform()->SetRelativePos(vCurPos);
+	PrevRotX = Transform()->GetRelativeRot().x;
+	PrevRotY = Transform()->GetRelativeRot().y;
+	PrevMousePos = CKeyMgr::GetInst()->GetMousePos();
 }
 
 void CPlayerScript::Booster()

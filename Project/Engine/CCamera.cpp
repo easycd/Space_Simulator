@@ -154,6 +154,7 @@ void CCamera::CalcProjMat()
 	{	
 		// 원근 투영
 		m_matProj = XMMatrixPerspectiveFovLH(m_FOV, m_fAspectRatio, 1.f, m_Far);
+		//XMMatrixLookAtLH()
 	}
 
 	// 투영행렬 역행렬 구하기

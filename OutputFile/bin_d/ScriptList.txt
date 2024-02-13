@@ -2,5 +2,6 @@ CCameraMoveScript
 CGravityScript
 CMissileScript
 CMonsterScript
+CPlanet_Lotating
 CPlayerScript
 CTestScript

@@ -73,14 +73,13 @@ void CRenderMgr::render_play()
         // - 재질에 따른 분류 (재질->쉐이더) 쉐이더 도메인
         //   쉐이더 도메인에 따라서 렌더링 순서분류
         m_vecCam[i]->SortObject();
+        m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();
         m_vecCam[i]->render();
     }
 }
 
 void CRenderMgr::render_editor()
 {
-   
-
     // 물체 분류
     m_pEditorCam->SortObject();
 

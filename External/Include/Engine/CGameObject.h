@@ -116,7 +116,8 @@ public:
 };
 
 template<typename T>
-inline T* CGameObject::GetScript(){
+inline T* CGameObject::GetScript()
+{
     for (size_t i = 0; i < m_vecScript.size(); ++i)
     {
         T* pScript = dynamic_cast<T*> (m_vecScript[i]);

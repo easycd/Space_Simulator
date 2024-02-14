@@ -110,7 +110,7 @@ void CreateTestLevel()
 			Sun->AddComponent(new CMeshRender);
 			Sun->AddComponent(new CPlanet_Lotating);
 
-			Sun->Transform()->SetRelativeScale(Vec3(2000.f, 2000.f, 2000.f));
+			Sun->Transform()->SetRelativeScale(Vec3(100000.f, 100000.f, 100000.f));
 			Sun->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 			Sun->GetScript<CPlanet_Lotating>()->SetRot(Vec3(0.f, 0.1f, 0.f));

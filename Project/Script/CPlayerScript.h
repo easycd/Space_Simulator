@@ -1,11 +1,17 @@
 #pragma once
 #include <Engine\CScript.h>
+#include "CCameraScript.h"
 
 class CPlayerScript :
     public CScript
 {
 private:
+    CCameraScript* CameraScript;
+    Vec2        PrevMousePos;
     float       m_fSpeed;
+    bool        m_Booster;
+
+    Vec3        OffSet;
 
 public:
     virtual void begin() override;
@@ -13,8 +19,16 @@ public:
 
     virtual void BeginOverlap(CCollider2D* _Other) override;
 
+    void SetBooster(bool Booster) { m_Booster = Booster; }
+    bool GetBooster() { return m_Booster; }
+
+    CPlayerScript* GetPlayerScript() { return this; }
+    void SetCameraScript(CCameraScript* CS) { CameraScript = CS; }
+
 private:
     void Shoot();
+    void Move();
+    void Booster();
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;
@@ -24,4 +38,3 @@ public:
     CPlayerScript();
     ~CPlayerScript();
 };
-

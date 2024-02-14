@@ -5,11 +5,15 @@
 #include <Engine\CMaterial.h>
 
 #include "CMissileScript.h"
+#include "CCameraScript.h"
 
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
-	, m_fSpeed(500.f)
+	, PrevMousePos(Vec2(0.f, 0.f))
+	, m_fSpeed(100.f)
+	, m_Booster(false)
+	, OffSet(Vec3(0.f, 0.f, 0.f))
 {
 	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_fSpeed, "Player Speed");
 }
@@ -21,61 +25,16 @@ CPlayerScript::~CPlayerScript()
 
 void CPlayerScript::begin()
 {
+	OffSet = Vec3(0.f, 0.f, -500.f);
 	// 동적 재질 생성
 	MeshRender()->GetDynamicMaterial(0);
 }
 
 void CPlayerScript::tick()
 {
-	Vec3 vCurPos = Transform()->GetRelativePos();
+	//PrevMousePos = CKeyMgr::GetInst()->GetMousePos();
 
-	if (KEY_PRESSED(KEY::UP))
-	{
-		for (int i = 0; i < 4; ++i)
-		{
-			vCurPos.y += DT * m_fSpeed;
-		}
-	}
-
-	if (KEY_PRESSED(KEY::DOWN))
-	{
-		for (int i = 0; i < 4; ++i)
-		{
-			vCurPos.y -= DT * m_fSpeed;
-		}
-	}
-
-	if (KEY_PRESSED(KEY::LEFT))
-	{
-		for (int i = 0; i < 4; ++i)
-		{
-			vCurPos.x -= DT * m_fSpeed;
-		}
-	}
-
-	if (KEY_PRESSED(KEY::RIGHT))
-	{
-		for (int i = 0; i < 4; ++i)
-		{
-			vCurPos.x += DT * m_fSpeed;
-		}
-	}
-
-	if (KEY_PRESSED(KEY::Z))
-	{
-		Vec3 vRot = Transform()->GetRelativeRot();
-		vRot.z += DT * XM_PI;
-		Transform()->SetRelativeRot(vRot);
-	}
-
-	Transform()->SetRelativePos(vCurPos);			
-
-	if (KEY_TAP(KEY::SPACE))
-	{
-		DrawDebugCircle(Transform()->GetWorldPos(), 500.f, Vec4(0.f, 0.f, 1.f, 1.f), Vec3(0.f, 0.f, 0.f), 2.f);
-
-		Shoot();
-	}	
+	Move();
 }
 
 void CPlayerScript::Shoot()
@@ -89,15 +48,62 @@ void CPlayerScript::Shoot()
 	SpawnGameObject(pCloneMissile, vMissilePos, L"PlayerProjectile");
 }
 
+void CPlayerScript::Move()
+{
+	Vec3 vCurPos = Transform()->GetRelativePos();
+	Vec3 vRot = Transform()->GetRelativeRot();
+	Vec2 MousePos = CKeyMgr::GetInst()->GetMousePos(); //Y = 426
+
+	Vec3 vFront = Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	Vec3 vUp = Transform()->GetRelativeDir(DIR_TYPE::UP);
+	Vec3 vRight = Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
+
+
+
+	if (KEY_PRESSED(KEY::Q))
+		m_Booster = true;
+
+	if (KEY_RELEASE(KEY::Q))
+		m_Booster = false;
+
+
+	if (KEY_PRESSED(KEY::W))
+	{
+	}
+
+
+	if (KEY_PRESSED(KEY::S))
+	{
+
+	}
+	if (KEY_PRESSED(KEY::A))
+	{
+	}
+
+	if (KEY_PRESSED(KEY::D))
+	{
+	}
+
+	Transform()->SetRelativeRot(vRot);
+	Transform()->SetRelativePos(vCurPos);
+	PrevMousePos = CKeyMgr::GetInst()->GetMousePos();
+}
+
+void CPlayerScript::Booster()
+{
+}
+
 void CPlayerScript::BeginOverlap(CCollider2D* _Other)
 {
 	CGameObject* pOtherObject = _Other->GetOwner();
 
 	if (pOtherObject->GetName() == L"Monster")
 	{
-		DestroyObject(pOtherObject);		
+		DestroyObject(pOtherObject);
 	}
 }
+
+
 
 
 

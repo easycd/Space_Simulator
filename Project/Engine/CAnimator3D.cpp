@@ -7,6 +7,7 @@
 #include "CStructuredBuffer.h"
 #include "CResMgr.h"
 
+#include "CAnim3D.h"
 #include "CAnimation3DShader.h"
 
 #include "CKeyMgr.h"
@@ -25,6 +26,7 @@ CAnimator3D::CAnimator3D()
 	, m_fRatio(0.f)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
+	Safe_Del_Map(m_mapAnim);
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
 }
 
@@ -53,17 +55,31 @@ CAnimator3D::~CAnimator3D()
 
 void CAnimator3D::finaltick()
 {
-	// int a = 0;
+	//if (nullptr != m_pCurAnim)
+	//{
+	//	if (m_bRepeat && m_bFinish)
+	//	{
+	//		m_pCurAnim->Reset();
+	//	}
+
+		//UpdateData();
+		//m_pCurAnim->finaltick();
+
+	const tMTAnimClip& frm = m_pCurAnim->GetCurFrame();
+
 	m_dCurTime = 0.f;
 	// 현재 재생중인 Clip 의 시간을 진행한다.
 	m_vecClipUpdateTime[m_iCurClip] += DT;
 
-	if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+	if (m_vecClipUpdateTime[m_iCurClip] >= frm.dTimeLength)
 	{
-		m_vecClipUpdateTime[m_iCurClip] = 0.f;
+		if (m_bRepeat == true)
+			m_vecClipUpdateTime[m_iCurClip] = 0.f;
+		else
+			return;
 	}
 
-	m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];
+	m_dCurTime = frm.dStartTime + m_vecClipUpdateTime[m_iCurClip];
 
 	// 현재 프레임 인덱스 구하기
 	double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
@@ -80,6 +96,7 @@ void CAnimator3D::finaltick()
 
 	// 컴퓨트 쉐이더 연산여부
 	m_bFinalMatUpdate = false;
+
 }
 
 void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)
@@ -141,6 +158,45 @@ void CAnimator3D::ClearData()
 		pMtrl->SetBoneCount(0);
 	}
 }
+
+void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
+{
+	CAnim3D* pAnim = FindAnim(_strName);
+	assert(pAnim);
+
+	m_pCurAnim = pAnim;
+	m_bRepeat = _bRepeat;
+}
+
+CAnim3D* CAnimator3D::FindAnim(const wstring& _strName)
+{
+	map<wstring, CAnim3D*>::iterator iter = m_mapAnim.find(_strName);
+
+	if (iter == m_mapAnim.end())
+	{
+		return nullptr;
+	}
+
+	return iter->second;
+}
+
+void CAnimator3D::CreateAnimation(const wstring& _strAnimName
+	, double CurClipIndex, double mStartTime, double mFinalTime)
+{
+	CAnim3D* pAnim = new CAnim3D;
+	pAnim->SetAnimClip(m_pVecClip, m_vecClipUpdateTime);
+
+	pAnim->Create(_strAnimName, CurClipIndex, mStartTime, mFinalTime);
+
+	pAnim->m_pOwner = this;
+	m_mapAnim.insert(make_pair(_strAnimName, pAnim));
+}
+
+
+void CAnimator3D::ChangeAnimation()
+{
+}
+
 
 void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)
 {

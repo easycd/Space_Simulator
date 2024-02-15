@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CScriptMgr.h"
 
+#include "BulletScript.h"
 #include "CCameraMoveScript.h"
 #include "CCameraScript.h"
 #include "CGravityScript.h"
@@ -11,6 +12,7 @@
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
+	_vec.push_back(L"BulletScript");
 	_vec.push_back(L"CCameraMoveScript");
 	_vec.push_back(L"CCameraScript");
 	_vec.push_back(L"CGravityScript");
@@ -22,6 +24,8 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
+	if (L"BulletScript" == _strScriptName)
+		return new BulletScript;
 	if (L"CCameraMoveScript" == _strScriptName)
 		return new CCameraMoveScript;
 	if (L"CCameraScript" == _strScriptName)
@@ -43,6 +47,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 {
 	switch (_iScriptType)
 	{
+	case (UINT)SCRIPT_TYPE::ULLETSCRIPT:
+		return new BulletScript;
+		break;
 	case (UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return new CCameraMoveScript;
 		break;
@@ -72,6 +79,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 {
 	switch ((SCRIPT_TYPE)_pScript->GetScriptType())
 	{
+	case SCRIPT_TYPE::ULLETSCRIPT:
+		return L"BulletScript";
+		break;
+
 	case SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return L"CCameraMoveScript";
 		break;

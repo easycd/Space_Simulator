@@ -6,6 +6,9 @@ class CCameraScript
 private:
     float       m_fCamSpeed;
 
+    Vec3        OffSet;
+
+
     //bool SetOff;
 
     //CPlayerScript* PlayerScript;
@@ -15,6 +18,7 @@ private:
 
     Vec2 PrevMousePos;
     Vector3 CameraPos;
+    CGameObject* Muzzle;
     CGameObject* m_Target;
 
 public:
@@ -22,6 +26,7 @@ public:
     virtual void tick() override;
 
     void SetTarget(CGameObject* target) { m_Target = target; }
+    void SetMuzzle(CGameObject* muzzle) { Muzzle = muzzle; }
     //void SetOffset(Vec3(Off)) { Offset = Off; }
     //void SetPlayerScript(CPlayerScript ps) { PlayerScript = ps; }
 

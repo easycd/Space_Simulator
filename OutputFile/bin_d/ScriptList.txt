@@ -1,3 +1,4 @@
+BulletScript
 CCameraMoveScript
 CCameraScript
 CGravityScript

@@ -172,6 +172,7 @@ call CodeGen.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BulletScript.h" />
     <ClInclude Include="CCameraMoveScript.h" />
     <ClInclude Include="CCameraScript.h" />
     <ClInclude Include="CGravityScript.h" />
@@ -184,6 +185,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BulletScript.cpp" />
     <ClCompile Include="CCameraMoveScript.cpp" />
     <ClCompile Include="CCameraScript.cpp" />
     <ClCompile Include="CGravityScript.cpp" />

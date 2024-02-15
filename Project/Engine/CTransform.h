@@ -18,6 +18,16 @@ private:
     Matrix  m_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
     Matrix  m_matWorldInv;
 
+    Matrix matRot;
+
+    Matrix  Player_matWorldScale;    // 월드 크기 행렬
+    Matrix  Player_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
+
+    Matrix  Camera_matWorldScale;    // 월드 크기 행렬
+    Matrix  Camera_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
+
+    CGameObject* MainCamera;
+
 public:
     void SetRelativePos(Vec3 _vPos) { m_vRelativePos = _vPos; }
     void SetRelativeScale(Vec3 _vScale) { m_vRelativeScale = _vScale; }
@@ -42,7 +52,18 @@ public:
     const Matrix& GetWorldMat() const { return m_matWorld; }
     const Matrix& GetWorldInvMat() const { return m_matWorldInv; }
 
+    const Matrix& GetCameraWorldScaleMat() { return Camera_matWorldScale; }
+    const Matrix& GetCameraWorldMat() const { return Camera_matWorld; }
+
+    void SetPlayerWorldMat(const Matrix& _Pmat) { Player_matWorld = _Pmat; }
+    void SetPlayerWorldScaleMat(const Matrix& _PScalemat) { Player_matWorldScale = _PScalemat; }
+    const Matrix& GetPlayerWorldScaleMat() { return Player_matWorldScale; }
+    const Matrix& GetPlayerWorldMat() const { return Player_matWorld; }
+
     void SetWorldMat(const Matrix& _mat) { m_matWorld = _mat; }
+
+    void SetMainCamera(CGameObject* maincam) { MainCamera = maincam; }
+
 
 public:
     virtual void finaltick() override;    

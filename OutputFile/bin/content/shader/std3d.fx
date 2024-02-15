@@ -90,9 +90,9 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
         CalcLight3D(_in.vViewPos, vViewNormal, i, lightcolor, fSpecPow);
     }
                  
-    vOutColor.xyz = vOutColor.xyz * lightcolor.vDiffuse.xyz
-                    + vOutColor.xyz * lightcolor.vAmbient.xyz
-                    + saturate(g_Light3DBuffer[0].Color.vDiffuse.xyz) * 0.3f * fSpecPow * SPEC_COEFF;
+   //vOutColor.xyz = vOutColor.xyz * lightcolor.vDiffuse.xyz
+   //                + vOutColor.xyz * lightcolor.vAmbient.xyz
+   //                + saturate(g_Light3DBuffer[0].Color.vDiffuse.xyz) * 0.3f * fSpecPow * SPEC_COEFF;
     
     if(IS_SKYBOX_ENV)
     {        

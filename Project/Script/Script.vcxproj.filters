@@ -45,6 +45,9 @@
     <ClInclude Include="BulletScript.h">
       <Filter>Script</Filter>
     </ClInclude>
+    <ClInclude Include="CPlanet_Lotating.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -78,6 +81,9 @@
       <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="BulletScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlanet_Lotating.cpp">
       <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>

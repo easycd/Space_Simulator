@@ -15,6 +15,7 @@ CCameraScript::CCameraScript()
 	, m_fCamSpeed(100.f)
 	, CameraPos(Vec3(0.f, 0.f, 0.f))
 	, PrevMousePos(Vec2(0.f, 0.f))
+	, OffSet(Vec3(0.f, 0.f, 0.f))
 
 {
 }
@@ -25,8 +26,21 @@ CCameraScript::~CCameraScript()
 
 void CCameraScript::begin()
 {
+	//Vec3 vPos = Transform()->GetRelativePos();
+	
+	//Transform()->SetMainCamera(this->GetOwner());
+	Vec3 TarGetPos = m_Target->Transform()->GetRelativePos();
+	OffSet = Vec3(0.f,0.f,-500.f);
+	//CameraPos = TarGetPos - CameraPos;
+	//Transform()->SetRelativePos(CameraPos);
+
 	CPlayerScript* PlayerScript = m_Target->GetScript<CPlayerScript>()->GetPlayerScript();
 	PlayerScript->SetCameraScript(this);
+
+	//Vec3 MuzzlePos = Muzzle->Transform()->GetRelativePos();
+	//MuzzlePos = Transform()->GetRelativePos() + OffSet;
+
+	
 }
 
 
@@ -50,10 +64,11 @@ void CCameraScript::Camera3DMove()
 	Vec3 TarGetRot = m_Target->Transform()->GetRelativeRot();
 	Vec3 TarGetPos = m_Target->Transform()->GetRelativePos();
 
+
 	if (KEY_PRESSED(KEY::W))
 	{
 		vRot.x -= DT * 0.7f;
-		//vPos += DT * vUp * fSpeed;
+		vPos += DT * vUp * fSpeed;
 		if (TarGetRot.x <= XM_PI / 2.1f)
 		{
 			TarGetRot.x += DT * 0.2f;
@@ -64,7 +79,7 @@ void CCameraScript::Camera3DMove()
 	if (KEY_PRESSED(KEY::S))
 	{
 		vRot.x += DT * 0.7f;
-		//vPos -= DT * vUp * fSpeed;
+		vPos -= DT * vUp * fSpeed;
 		if (TarGetRot.x >= XM_PI / 2.3f)
 		{
 			TarGetRot.x -= DT * 0.2f;
@@ -75,7 +90,7 @@ void CCameraScript::Camera3DMove()
 	if (KEY_PRESSED(KEY::A))
 	{
 		vRot.z += DT * 1.0f;
-		//vPos -= DT * vRight * fSpeed;
+		vPos -= DT * vRight * fSpeed;
 		if (TarGetRot.z <= XM_PI / 20.f)
 		{
 			TarGetRot.z += DT * 0.3f;
@@ -86,7 +101,7 @@ void CCameraScript::Camera3DMove()
 	if (KEY_PRESSED(KEY::D))
 	{
 		vRot.z -= DT * 1.0f;
-		//vPos += DT * vRight * fSpeed;
+		vPos += DT * vRight * fSpeed;
 
 		if (TarGetRot.z >= -(XM_PI / 20.f))
 		{
@@ -135,6 +150,7 @@ void CCameraScript::Camera3DMove()
 	}
 	PrevMousePos = MousePos;
 	Transform()->SetRelativePos(vPos);
+	m_Target->Transform()->SetRelativePos(TarGetPos);
 	Transform()->SetRelativeRot(vRot);
 
 }

@@ -48,7 +48,10 @@ void CreateTestLevel()
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
 
+	//pMainCam->Transform()->SetRelativeRot(-XM_PI * 1.6, XM_PI * 3, 0.f);
+
 	SpawnGameObject(pMainCam, Vec3(0.f, 0.f, 0.f), 0);
+	pMainCam->Transform()->SetMainCamera(pMainCam);
 
 	//// UI cameara
 	////CGameObject* pUICam = new CGameObject;
@@ -115,13 +118,14 @@ void CreateTestLevel()
 	Ptr<CMeshData> pMeshData = nullptr;
 	CGameObject* Plane = nullptr;
 
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\SpaceShip.fbx");
-	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Space Ship.mdat");
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\untitled.fbx");
+	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\untitled.mdat");
 	Plane = pMeshData->Instantiate();
 	Plane->Transform()->SetRelativeScale(Vec3(0.3f, 0.3f, 0.3f));
 	//pObj->Animator3D()->CreateAnimation(L"Walk", 0, 2, 7);
 	//pObj->Animator3D()->Play(L"Walk", true);
 	Plane->Transform()->SetRelativeRot(Vec3(XM_PI / 2.2f, XM_PI * 1.05, XM_PI / 90.f));
+	//Plane->Transform()->SetRelativeRot(Vec3(0.f,0.f,0.f));
 	Plane->AddComponent(new CPlayerScript);
 
 
@@ -130,14 +134,33 @@ void CreateTestLevel()
 	CCS->SetTarget(Plane);
 
 
-	//pObj->AddComponent(new CCollider2D);
-	//pObj->Collider2D()->SetOffsetPos(Vec3(0.f, -300.f, 0.f));
-	//pObj->Collider2D()->SetOffsetScale(Vec3(1000.f,1000.f, 1000.f));
+	//Plane->AddComponent(new CCollider2D);
+	//Plane->Collider2D()->SetOffsetPos(Vec3(0.f, -300.f, 0.f));
+	//Plane->Collider2D()->SetOffsetScale(Vec3(1000.f,1000.f, 1000.f));
 	Plane->SetName(L"SpaceShip");
 	SpawnGameObject(Plane, Vec3(53.f, -170.f, 500.f), L"Player");
 
-	pMainCam->AddChild(Plane);
+	//Plane->AddChild(pMainCam);
 
+
+	//CGameObject* Muzzle = new CGameObject;
+	//Muzzle->SetName(L"Muzzle");
+	//Muzzle->AddComponent(new CTransform);
+	//Muzzle->AddComponent(new CMeshRender);
+
+	//Muzzle->Transform()->SetRelativeScale(Vec3(0.1f, 0.1f, 0.1f));
+	//Muzzle->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+	//Muzzle->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	//Muzzle->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+
+	//Muzzle->AddComponent(new CCollider2D);
+	//Muzzle->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	//Muzzle->Collider2D()->SetOffsetScale(Vec3(1000.f,1000.f, 1000.f));
+
+	//SpawnGameObject(Muzzle, Vec3(-1.f,-909.f,-233.f), 0);
+
+	//Plane->AddChild(Muzzle);
+	pMainCam->AddChild(Plane);
 
 	{
 		Ptr<CMeshData> HouseMeshData = nullptr;
@@ -146,6 +169,8 @@ void CreateTestLevel()
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
 		HouseMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\House.mdat");
 		pHouse = HouseMeshData->Instantiate();
+		CPlayerScript* PS = Plane->GetScript<CPlayerScript>();
+		PS->SetEnemy(pHouse);
 		pHouse->Transform()->SetRelativeScale(Vec3(0.5f, 0.5f, 0.5f));
 		pHouse->AddComponent(new CCollider2D);
 		pHouse->Collider2D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
@@ -154,7 +179,6 @@ void CreateTestLevel()
 		SpawnGameObject(pHouse, Vec3(200.f, 300.f, 1000.f), L"Monster");
 
 	}
-
 
 
 	//{

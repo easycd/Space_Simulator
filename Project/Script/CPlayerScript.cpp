@@ -154,6 +154,8 @@ void CPlayerScript::BeginOverlap(CCollider2D* _Other)
 	{
 		DestroyObject(pOtherObject);
 	}
+
+	//test
 }
 
 
